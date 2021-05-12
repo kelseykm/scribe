@@ -1,0 +1,94 @@
+<header>
+	{{>titlebar}}
+	{{>navigation}}
+</header>
+<main>
+	<section>
+		{{>errorsuccess}}
+		{{>popup}}
+	</section>
+
+	<section>
+
+		<div class="notes-container">
+			<div class="notes-topic"><p>{{my.topicName}}</p></div>
+
+			<div class="saved-notes">
+
+				<div class="text-notes">
+					<p class="text-notes__header">Text notes</p>
+
+					{{#each my.entries}}
+						{{#if text_note_entry}}
+						<div class="text-note">
+							<p class="creation-time">{{creation_time}}</p>
+							<button class="delete-note"><p>&times;</p></button>
+							<p class="note-name">{{entry_name}}</p>
+							{{{readFile text_note_entry}}}
+						</div>
+						{{/if}}
+					{{/each}}
+
+				</div>
+
+				<div class="voice-notes">
+					<p class="voice-notes__header">Voice notes</p>
+
+					{{#each my.entries}}
+					{{#if voice_note_entry}}
+						<div class="voice-note">
+							<p class="creation-time">{{creation_time}}</p>
+							<button class="delete-note"><p>&times;</p></button>
+							<p class="note-name">{{entry_name}}</p>
+							<div class="audio-player-container">
+							  <audio src="{{cat '/db/voice_notes/' voice_note_entry }}" class="audio__player"></audio>
+								<div class="audio__seek-bar">
+									<div class="audio__seek"></div>
+								</div>
+								<div class="audio__time">
+									<span class="current-time">00:00</span>/<span class="duration">00:00</span>
+								</div>
+								<div class="audio-actions">
+									<button class="audio__play_pause">
+										<div>
+											<img src="/images/play_pause.png">
+										</div>
+									</button>
+									<button class="audio__stop">
+										<div>
+											<img src="/images/stop.png">
+										</div>
+									</button>
+								</div>
+							</div>
+
+						</div>
+					{{/if}}
+					{{/each}}
+				</div>
+			</div>
+
+			{{#if my.topicName}}
+			<form class="text-notes-form" action="{{catcode '/topics/topic/' my.topicName}}" method="post"></form>
+			<form class="voice-notes-form" action="{{catcode '/topics/topic/' my.topicName}}" method="post"></form>
+			{{/if}}
+		</div>
+
+		<div class="add-notes">
+			<div class="add-text-notes-container">
+				<a href=""><img src="/images/pencil.png" alt="" class="add-notes__text"></a>
+				<p>Add Text note</p>
+			</div>
+			<div class="add-voice-notes-container">
+				<a href=""><img src="/images/microphone.png" alt="" class="add-notes__voice"></a>
+				<p>Add Voice note</p>
+			</div>
+			<div class="delete-topics-container">
+				<a href=""><img src="/images/dustbin.png" alt="" class="delete-topic"></a>
+				<p>Delete topic</p>
+			</div>
+		</div>
+
+
+	</section>
+</main>

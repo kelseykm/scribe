@@ -1,0 +1,25 @@
+{
+  "name": "scribe",
+  "version": "1.0.0",
+  "description": "The only way to take notes in a modern world",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "connect-sqlite3": "^0.9.11",
+    "dotenv": "^9.0.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.0",
+    "express-session": "^1.17.1",
+    "multer": "^1.4.2",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

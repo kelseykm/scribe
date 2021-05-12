@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{my.title}}</title>
+	<link rel="shortcut icon" href="/images/favicon.ico">
+
+	{{#if my.login}}
+	<link rel="stylesheet" href="/css/login.min.css">
+	{{else}}
+	<link rel="stylesheet" href="/css/signup.min.css">
+	{{/if}}
+
+</head>
+<body>
+
+	{{{body}}}
+
+	<div class="spacer" style="flex-grow:1"></div>
+
+	<footer>
+		<div class="footer-container">
+			<div class="footer__caption">
+				<h2>The only way to take notes in a modern world</h2>
+			</div>
+			<div class="footer__copyright">
+				<p>kelsey km &#169;2021</p>
+			</div>
+		</div>
+	</footer>
+
+	{{#if my.login}}
+	<script src="/js/login.min.js" charset="utf-8" defer></script>
+	{{else}}
+	<script src="/js/signup.min.js" charset="utf-8" defer></script>
+	{{/if}}
+
+</body>
+</html>

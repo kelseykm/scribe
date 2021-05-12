@@ -1,0 +1,33 @@
+<header>
+  {{>titlebar}}
+</header>
+<main>
+	<section>
+		{{>errorsuccess}}
+	</section>
+
+	<section>
+    <div class="signup-container">
+      <form class="signup-form" action="/signup" method="post">
+        <div class="username-container">
+          <label for="username">Username</label>
+          <input type="text" name="username" required>
+        </div>
+        <div class="email-container">
+          <label for="email">Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="password-container">
+          <label for="password">Password</label>
+          <input type="password" name="password" required>
+        </div>
+        <div class="password1-container">
+          <label for="password1">Re-enter Password</label>
+          <input type="password" name="password1" required>
+        </div>
+        <button class="signup-button" type="submit">Sign Up</button>
+        <p>Already have an account? <a href="/login">Log in</a></p>
+      </form>
+    </div>
+	</section>
+</main>
