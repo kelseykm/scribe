@@ -12,6 +12,6 @@
 * Put the passphrase of the private key generated in the ```.env``` file.
 * Also provide a *session secret* in the ```.env``` file. It can be anything...any random string.
 
-### **Start up***
+### **Start up**
 * To start the app, ```cd``` into the directory with the app and run ```npm run start```
 * In your browser, go to ```https://localhost:8080```
