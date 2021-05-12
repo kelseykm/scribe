@@ -8,7 +8,7 @@
 ### **Installation**
 * Ensure you have Nodejs installed.
 * ```cd``` into the directory containing the ```package.json``` file and run ```npm install``` to install all the dependencies.
-* ```cd``` into the ```certs``` directory and run ```openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365```
+* Make a directory called ```certs```, ```cd``` into it and run ```openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365```
 * Put the passphrase of the private key generated in the ```.env``` file.
 * Also provide a *session secret* in the ```.env``` file. It can be anything...any random string.
 
