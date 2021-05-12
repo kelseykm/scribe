@@ -2,7 +2,7 @@
 *The only way to take notes in a modern world*
 
 * Scribe is a web application that allows you to take both voice and text notes.
-* The notes are separated topics.
+* The notes are separated by topics.
 * Each user has an account.
 
 ### **Installation**
