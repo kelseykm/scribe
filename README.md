@@ -15,3 +15,11 @@
 ### **Start up**
 * To start the app, ```cd``` into the directory with the app and run ```npm run start```
 * In your browser, go to ```https://localhost:8080```
+
+![alt text](./git_images/scribe_login.png)
+![alt text](./git_images/scribe_signup.png)
+![alt text](./git_images/scribe_home.png)
+![alt text](./git_images/scribe_navbar.png)
+![alt text](./git_images/scribe_topic.png)
+![alt text](./git_images/scribe_addtext.png)
+![alt text](./git_images/scribe_addvoice.png)
