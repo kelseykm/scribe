@@ -11,6 +11,7 @@
 * Make a directory called ```certs```, ```cd``` into it and run ```openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365```
 * Put the passphrase of the private key generated in the ```.env``` file.
 * Also provide a *session secret* in the ```.env``` file. It can be anything...any random string.
+* Make a directory called ```db```. Inside it, add two sub-directories with the names ```voice_notes``` and ```text_notes```
 
 ### **Start up**
 * To start the app, ```cd``` into the directory with the app and run ```npm run start```
