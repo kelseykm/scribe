@@ -1,5 +1,3 @@
-//Written by kelseykm
-
 const crypto = require('crypto');
 const { promisify } = require('util');
 const fs = require('fs');
@@ -57,25 +55,28 @@ const aesCfbCipher = {
   ALGO: 'aes-256-cfb',
   IV_LENGTH: 16,
   KEY_LENGTH: 32,
-  encryptFile: function (input, output) {
-    const inputStream = fs.createReadStream(input);
+  encryptFile: function (input, output, callback) {
+    const inStream = fs.createReadStream(input);
 
     fs.access(output, err => {
       if (!err) fs.rmSync(output)
     });
 
-    const outputStream = fs.createWriteStream(output, { flags: 'a' });
+    const outStream = fs.createWriteStream(output, { flags: 'a' });
 
     let key = crypto.randomBytes(this.KEY_LENGTH);
     let iv = crypto.randomBytes(this.IV_LENGTH);
 
-    outputStream.write(key);
-    outputStream.write(iv);
+    outStream.write(key);
+    outStream.write(iv);
     const encCipher = crypto.createCipheriv(this.ALGO, key, iv);
 
-    inputStream.pipe(encCipher).pipe(outputStream);
+    inStream.pipe(encCipher).pipe(outStream);
+    outStream.on('finish', () => {
+      typeof callback === 'function' && callback();
+    });
   },
-  decryptFile: function (input, output) {
+  decryptFile: function (input, output, callback) {
     const inStream = fs.createReadStream(input, { start: this.KEY_LENGTH + this.IV_LENGTH });
     const outStream = fs.createWriteStream(output);
 
@@ -91,6 +92,10 @@ const aesCfbCipher = {
 
         const decCipher = crypto.createDecipheriv(this.ALGO, key, iv);
         inStream.pipe(decCipher).pipe(outStream);
+
+        outStream.on('finish', () => {
+          typeof callback === 'function' && callback();
+        });
       });
     });
   },

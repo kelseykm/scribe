@@ -10,6 +10,7 @@ const path = require('path');
 const https = require('https');
 const fs = require('fs');
 const crypto = require('crypto');
+const { promisify } = require('util');
 const { aesGcmCipher, aesCfbCipher } = require('./cryptography.js');
 
 const loginRoutes = require('./routes/login.js');
@@ -26,6 +27,7 @@ dotenv.config();
 const app = express();
 const SQLiteStore = connectSqlite3(session);
 
+require('./setup.js');
 const tempDir = path.join(process.env.PWD, 'db', 'tmp');
 
 //View Engine
@@ -83,12 +85,9 @@ app.get('/db/voice_notes/:filename', (req, res) => {
 	if (!req.session.user) return res.redirect('/');
 	aesCfbCipher.decryptFile(
 		path.join(process.env.PWD, `/db/voice_notes/${req.params.filename}`),
-		path.join(tempDir, req.params.filename)
+		path.join(tempDir, req.params.filename),
+		() => res.sendFile(path.join(tempDir, req.params.filename))
 	);
-	setTimeout(() => {
-		res.sendFile(path.join(tempDir, req.params.filename));
-		fs.rm(path.join(tempDir, req.params.filename));
-	}, 1500);
 });
 
 //Start server
@@ -96,5 +95,13 @@ https.createServer({
     key: fs.readFileSync('./certs/key.pem'),
     cert: fs.readFileSync('./certs/cert.pem'),
     passphrase: process.env.KEY_PASSPHRASE
-}, app)
-.listen(process.env.PORT);
+}, app).listen(process.env.PORT);
+
+//Remove temp dir on server stop
+function clearTempDir() {
+	fs.rmSync(tempDir, { recursive: true, force: true });
+	process.exit(0);
+}
+
+process.on('SIGTERM', clearTempDir);
+process.on('SIGINT', clearTempDir);
