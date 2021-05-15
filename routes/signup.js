@@ -3,7 +3,7 @@
 const express = require('express');
 const db = require('../database.js');
 const { hash } = require('../cryptography.js');
-const { emailregex } = require('../utils.js');
+const emailregex = require('../utils.js');
 
 const router = express.Router();
 
