@@ -112,13 +112,11 @@ router.post('/topic/:topicName', ensureFields, (req, res) => {
 	let voiceNoteEntry = req.file ? req.file["filename"] : null;
 
 	if (req.file) {
-		(async () => {
-			await aesCfbCipher.encryptFile(
-				path.join(tempDir, req.file["filename"]),
-				path.join(process.env.PWD, `/db/voice_notes/${req.file["filename"]}`)
-			);
-			fs.rm(path.join(tempDir, req.file["filename"]));
-		})()
+		aesCfbCipher.encryptFile(
+			path.join(tempDir, req.file["filename"]),
+			path.join(process.env.PWD, `/db/voice_notes/${req.file["filename"]}`)
+		);
+		setTimeout(() => fs.rm(path.join(tempDir, req.file["filename"])), 500);
 	}
 
 	db.get('SELECT entry_name FROM notes WHERE user_id = ? AND topic_name = ? AND entry_name = ?',
