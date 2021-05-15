@@ -9,6 +9,7 @@ const { aesGcmCipher, aesCfbCipher } = require('../cryptography.js');
 
 const router = express.Router();
 const textNotesDir = path.join(process.env.PWD, 'db', 'text_notes');
+const tempDir = path.join(process.env.PWD, 'db', 'tmp');
 
 function saveText(entry) {
 	let filename = crypto.randomUUID();
@@ -112,7 +113,7 @@ router.post('/topic/:topicName', ensureFields, (req, res) => {
 
 	if (req.file) {
 		aesCfbCipher.encryptFile(
-			`/tmp/${req.file["filename"]}`,
+			path.join(tempDir, req.file["filename"]),
 			path.join(process.env.PWD, `/db/voice_notes/${req.file["filename"]}`)
 		)
 	}
