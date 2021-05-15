@@ -26,6 +26,8 @@ dotenv.config();
 const app = express();
 const SQLiteStore = connectSqlite3(session);
 
+const tempDir = path.join(process.env.PWD, 'db', 'tmp');
+
 //View Engine
 let hbs = exphbs.create({
 	defaultLayout: 'main',
@@ -46,7 +48,7 @@ app.set('view engine', '.hbs');
 //Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(multer({ dest: '/tmp' }).single('voice-note-entry'));
+app.use(multer({ dest: tempDir }).single('voice-note-entry'));
 app.use(session({
 	store: new SQLiteStore({ db: 'sessionsDB.sqlite3', dir: path.join(process.env.PWD, 'db') }),
   secret: process.env.SESSION_SECRET,
@@ -81,9 +83,12 @@ app.get('/db/voice_notes/:filename', (req, res) => {
 	if (!req.session.user) return res.redirect('/');
 	aesCfbCipher.decryptFile(
 		path.join(process.env.PWD, `/db/voice_notes/${req.params.filename}`),
-		`/tmp/${req.params.filename}`
-	)
-	setTimeout(() => res.sendFile(`/tmp/${req.params.filename}`), 1500)
+		path.join(tempDir, req.params.filename)
+	);
+	setTimeout(() => {
+		res.sendFile(path.join(tempDir, req.params.filename));
+		fs.rm(path.join(tempDir, req.params.filename));
+	}, 1500);
 });
 
 //Start server
