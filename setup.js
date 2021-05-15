@@ -8,7 +8,7 @@ for (let dir of requiredDirs) {
   fs.access(dirpath, accessErr => {
     if (accessErr) {
       fs.mkdir(dirpath, mkdirErr => {
-        if (mkdirErr) console.error(mkdirErr);
+        if (mkdirErr.code !== 'EEXIST') console.error(mkdirErr);
       });
     }
   });
