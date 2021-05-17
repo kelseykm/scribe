@@ -13,7 +13,9 @@
 }
 
 
-* {
+*,
+*::before,
+*::after {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -506,7 +508,7 @@ a:focus, a:hover {
 
 .text-notes, .voice-notes {
 	border-radius: 5px;
-	margin: 2em;
+	margin: 1em;
 	box-shadow: 0 0 0 2px var(--primary-color),
 		0 0 12px 6px rgba(3,3,3,0.3);
 	display: flex;
@@ -516,11 +518,11 @@ a:focus, a:hover {
 }
 
 .text-notes {
-	width: 50%;
+	width: 63%;
 }
 
 .voice-notes {
-	width: 30%;
+	width: 25%;
 }
 
 .text-notes__header, .voice-notes__header {
@@ -534,17 +536,24 @@ a:focus, a:hover {
 }
 
 .text-note, .voice-note {
-	width: 80%;
+	width: 100%;
 	border-radius: 5px;
 	background-color: var(--primary-color);
 	margin: 1em;
 	box-shadow: 0 0 0 2px var(--primary-color),
 		0 0 12px 6px rgba(3,3,3,0.3);
+	position: relative;
+}
+
+.text-note {
+	padding: 2em;
+}
+
+.voice-note {
+	padding: 1em;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 1em;
-	position: relative;
 }
 
 .note-name {
@@ -552,12 +561,17 @@ a:focus, a:hover {
 	font-size: 2em;
 	border-bottom: 3px solid var(--accent-color);
 	max-width: max-content;
-	margin-bottom: 0.5em;
+	margin: 0 auto 0.5em;
 }
 
-.text-note > *:not(.note-name, .delete-note, .creation-time) {
+.text-note > *:where(:not(.note-name, .delete-note, .creation-time)) {
 	font-family: var(--secondary-font);
-	font-size: 1.5em;
+	font-size: 1.4em;
+	text-align: left;
+}
+
+.text-note li::marker {
+	color: var(--accent-color);
 }
 
 .creation-time {
@@ -603,6 +617,24 @@ a:focus, a:hover {
 
 .delete-note:hover > p, .delete-note:focus >p {
 	color: var(--accent-color);
+}
+
+.edit-note {
+	width: 1.2em;
+	height: 1.2em;
+	border-radius: 3px;
+	outline: none;
+	border: none;
+	background-color: var(--primary-color);
+	position: absolute;
+	top: 0;
+	right: 1.8em;
+	margin: 3px;
+}
+
+.edit-note__image {
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .audio-player-container {
@@ -961,11 +993,20 @@ a:focus, a:hover {
 }
 
 @media only screen and (max-width: 767px) {
+	.title-bar {
+			height: 4em;
+	}
+
 	.nav-bar {
-		width: 80vw;
+		width: 80%;
+	}
+
+	.nav-content-separator {
+		height: 4em;
 	}
 
 	.error-success {
+		top: 4em;
 		height: 7em;
 	}
 
@@ -992,11 +1033,11 @@ a:focus, a:hover {
 	}
 
 	.text-notes {
-		width: 70%;
+		width: 75%;
 	}
 
 	.voice-notes {
-		width: 70%;
+		width: 75%;
 	}
 
 	.add-text-notes-container,

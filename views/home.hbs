@@ -22,7 +22,10 @@
 						{{#if text_note_entry}}
 						<div class="text-note">
 							<p class="creation-time">{{creation_time}}</p>
-							<button class="delete-note"><p>&times;</p></button>
+							<button class="edit-note" title="Edit Note">
+								<img src="/images/edit.png" alt="" class="edit-note__image">
+							</button>
+							<button class="delete-note" title="Delete Note"><p>&times;</p></button>
 							<p class="note-name">{{entry_name}}</p>
 							{{{readFile text_note_entry}}}
 						</div>
@@ -38,7 +41,7 @@
 					{{#if voice_note_entry}}
 						<div class="voice-note">
 							<p class="creation-time">{{creation_time}}</p>
-							<button class="delete-note"><p>&times;</p></button>
+							<button class="delete-note" title="Delete Note"><p>&times;</p></button>
 							<p class="note-name">{{entry_name}}</p>
 							<div class="audio-player-container">
 							  <audio src="{{cat '/db/voice_notes/' voice_note_entry }}" class="audio__player"></audio>

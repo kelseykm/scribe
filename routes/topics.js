@@ -20,6 +20,59 @@ function saveText(entry) {
 	return filename;
 }
 
+function updateText(req, res) {
+	db.get('SELECT text_note_entry FROM notes WHERE user_id = ? AND topic_name = ? AND entry_name = ?',
+	[ req.session.user.id, req.body["topic-name"], req.body["old-entry-name"] ],
+	(err, row) => {
+		if (err) console.error(err);
+
+		let filename = row["text_note_entry"];
+		let pathToFile = path.join(textNotesDir, filename);
+		fs.writeFile(pathToFile, aesGcmCipher.encrypt(req.body["text-note-entry"]), err => {
+			if (err) console.error(err);
+		});
+
+		if (req.body["old-entry-name"] !== req.body["entry-name"]) {
+
+			db.get('SELECT entry_name FROM notes WHERE user_id = ? AND topic_name = ? AND entry_name = ?',
+			[req.session.user.id, req.body["topic-name"], req.body["entry-name"]], (err, row) => {
+				if (err) console.error(err);
+				if (row) {
+					db.all('SELECT topic_name FROM topics WHERE user_id = ? ORDER BY creation_time',
+					req.session.user.id,
+					(err, topicRows) => {
+						if (err) console.error(err);
+
+						db.all('SELECT * FROM notes WHERE user_id = ? AND topic_name = ? ORDER BY creation_time',
+						[req.session.user.id, req.params.topicName],
+						(err, entryRows) => {
+							if (err) console.error(err);
+							res.render('home', {
+								my: {
+									entries: entryRows,
+									message: "A note with that entry name already exists",
+									showBread: true,
+									title: 'Scribe - ' + req.params.topicName,
+									topics: topicRows,
+									topicName: req.params.topicName,
+									username: req.session.user.username,
+								},
+							});
+						});
+					});
+				} else {
+					db.run('UPDATE notes SET entry_name = ? WHERE user_id = ? AND topic_name = ? AND entry_name = ?',
+					[ req.body["entry-name"], req.session.user.id, req.body["topic-name"], req.body["old-entry-name"] ],
+					err => {
+						if (err) console.error(err);
+						res.redirect(req.originalUrl);
+					});
+				}
+			});
+		} else res.redirect(req.originalUrl);
+	});
+}
+
 function ensureLogin(req, res, next) {
   if (!req.session.user) return res.status(401).json({
     message: "Unauthorized. Ensure you're logged in"
@@ -108,6 +161,10 @@ router.get('/topic/:topicName', (req, res) => {
 });
 
 router.post('/topic/:topicName', ensureFields, (req, res) => {
+	if (req.body["old-entry-name"]) {
+		return updateText(req, res);
+	}
+
 	let textNoteEntry = req.body["text-note-entry"] ? saveText(req.body["text-note-entry"]) : null;
 	let voiceNoteEntry = req.file ? req.file["filename"] : null;
 

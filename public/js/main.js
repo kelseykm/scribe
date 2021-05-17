@@ -27,6 +27,7 @@ const addVoiceNotes = document.querySelector('.add-voice-notes-container a');
 const deleteTopic = document.querySelector('.delete-topics-container a');
 const notesForm = document.querySelector('.text-notes-form');
 const deleteNote = document.querySelectorAll('.delete-note');
+const editNote = document.querySelectorAll('.edit-note');
 const audioPlayerContainers = document.querySelectorAll(".audio-player-container");
 const accountChangeUsername = document.querySelector('.account-changeusername');
 const accountChangePassword = document.querySelector('.account-changepassword');
@@ -160,7 +161,7 @@ function createTextNote() {
 
 		let defaultNotesForm = document.createElement('form');
 		defaultNotesForm.setAttribute('method', 'post');
-		defaultNotesForm.setAttribute('action', '/home');
+		defaultNotesForm.setAttribute('action', window.location.pathname);
 		defaultNotesForm.classList.add('text-notes-form');
 
 		notesContainer.replaceChild(defaultNotesForm, newNotesForm);
@@ -317,7 +318,7 @@ async function createVoiceNote() {
 
 		let defaultNotesForm = document.createElement('form');
 		defaultNotesForm.setAttribute('method', 'post');
-		defaultNotesForm.setAttribute('action', '/home');
+		defaultNotesForm.setAttribute('action', window.location.pathname);
 		defaultNotesForm.classList.add('voice-notes-form');
 
 		notesContainer.replaceChild(defaultNotesForm, newNotesForm);
@@ -516,6 +517,105 @@ if (deleteNote) {
 	});
 }
 
+if (editNote) {
+	editNote.forEach(element => {
+		element.addEventListener('click', event => {
+			event.preventDefault();
+			let editableEntryName;
+			for (let element of [...event.currentTarget.parentElement.children]) {
+				if (element.classList.contains('note-name')) {
+					editableEntryName = element.innerText;
+					break;
+				}
+			}
+
+			let editableChildren = Array.from(event.currentTarget.parentElement.children);
+			editableChildren.splice(0,4);
+
+			let editableData = '';
+			editableChildren.forEach(child => {
+				editableData += child.innerHTML;
+			});
+
+			let currentNotesTopic = document.querySelector('.notes-topic p').innerText;
+			let currentNotesForm = document.querySelector('.text-notes-form');
+
+			let newNotesForm = document.createElement('form');
+			newNotesForm.setAttribute('method', 'post');
+			newNotesForm.setAttribute('action', window.location.pathname);
+			newNotesForm.classList.add('text-notes-form');
+
+			let topicName = document.createElement('input');
+			topicName.setAttribute('name', 'topic-name');
+			topicName.setAttribute('required', 'true');
+			topicName.value = currentNotesTopic;
+			topicName.style.display = 'none';
+
+			let oldEntryName = document.createElement('input');
+			oldEntryName.setAttribute('name', 'old-entry-name');
+			oldEntryName.setAttribute('required', 'true');
+			oldEntryName.value = editableEntryName;
+			oldEntryName.style.display = 'none';
+
+			let entryNameContainer = document.createElement('div');
+			entryNameContainer.classList.add('entry-name-container');
+
+			let entryNameLabel = document.createElement('label');
+			entryNameLabel.setAttribute('for', 'entry-name');
+			entryNameLabel.innerText = "Entry name:";
+			entryNameLabel.classList.add('entry-name-label');
+
+			let entryName = document.createElement('input');
+			entryName.setAttribute('name', 'entry-name');
+			entryName.setAttribute('required', 'true');
+			entryName.classList.add('entry-name');
+			entryName.value = editableEntryName;
+
+			entryNameContainer.append(entryNameLabel, entryName);
+
+			let textArea = document.createElement('textarea');
+			textArea.setAttribute('name', 'text-note-entry');
+
+			let textNotesButtonContainer = document.createElement('div');
+			textNotesButtonContainer.classList.add('text-notes-button-container');
+
+			let cancelButton = document.createElement('button');
+			cancelButton.classList.add('notes-cancel');
+			cancelButton.innerText = "Cancel";
+
+			let submitButton = document.createElement('button');
+			submitButton.setAttribute('type', 'submit');
+			submitButton.classList.add('notes-save');
+			submitButton.innerText = "Save";
+
+			textNotesButtonContainer.append(cancelButton, submitButton);
+
+			newNotesForm.append(topicName, oldEntryName, entryNameContainer, textArea, textNotesButtonContainer);
+
+			notesContainer.replaceChild(newNotesForm, currentNotesForm);
+			CKEDITOR.replace('text-note-entry');
+			CKEDITOR.instances["text-note-entry"].setData(editableData);
+
+			window.scroll(newNotesForm.offsetLeft, newNotesForm.offsetTop);
+
+			cancelButton.addEventListener('click', event => {
+				event.preventDefault();
+
+				let defaultNotesForm = document.createElement('form');
+				defaultNotesForm.setAttribute('method', 'post');
+				defaultNotesForm.setAttribute('action', window.location.pathname);
+				defaultNotesForm.classList.add('text-notes-form');
+
+				notesContainer.replaceChild(defaultNotesForm, newNotesForm);
+			});
+
+			submitButton.addEventListener('click', () => {
+				entryName.value = removeWhitespace(entryName.value);
+			});
+		});
+	});
+}
+
 audioPlayerContainers.forEach(container => {
 	let children = [];
 	let audioPlayer;
@@ -564,9 +664,6 @@ audioPlayerContainers.forEach(container => {
 	if (!isFinite(audioDuration)) {
 		audioPlayer.currentTime = Math.random() * 10000;
 		audioDuration.innerText = convTime(audioPlayer.duration);
-		setTimeout(()=>{
-			audioPlayer.currentTime = 0;
-		}, 3000)
 	}
 
 	audioPlayPause.addEventListener('click', () => {
@@ -588,5 +685,4 @@ audioPlayerContainers.forEach(container => {
 	audioSeekBar.addEventListener('click', event => {
 		audioPlayer.currentTime  = event.offsetX / audioSeekBar.offsetWidth * audioPlayer.duration;
 	});
-
 });

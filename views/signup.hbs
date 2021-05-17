@@ -11,19 +11,19 @@
       <form class="signup-form" action="/signup" method="post">
         <div class="username-container">
           <label for="username">Username</label>
-          <input type="text" name="username" required>
+          <input type="text" name="username" required autocomplete="username">
         </div>
         <div class="email-container">
           <label for="email">Email</label>
-          <input type="email" name="email" required>
+          <input type="email" name="email" required autocomplete="email">
         </div>
         <div class="password-container">
           <label for="password">Password</label>
-          <input type="password" name="password" required>
+          <input type="password" name="password" required autocomplete="new-password">
         </div>
         <div class="password1-container">
           <label for="password1">Re-enter Password</label>
-          <input type="password" name="password1" required>
+          <input type="password" name="password1" required autocomplete="new-password">
         </div>
         <button class="signup-button" type="submit">Sign Up</button>
         <p>Already have an account? <a href="/login">Log in</a></p>
