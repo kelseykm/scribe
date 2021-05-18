@@ -16,15 +16,20 @@ const topicPopup = document.querySelector('.topic-popup');
 const topicPopupText = document.querySelector('.topic-popup__text');
 const topicPopupOK = document.querySelector('.popup-btn__ok');
 const topicPopupCancel = document.querySelector('.popup-btn__cancel');
+const newTopicPopup = document.querySelector('.new-topic-popup');
+const newTopicPopupText = document.querySelector('.new-topic-popup__text');
+const newTopicPopupOK = document.querySelector('.new-topic-popup-btn__ok');
+const newTopicPopupCancel = document.querySelector('.new-topic-popup-btn__cancel');
 const overlay = document.querySelector('.overlay');
 const errorSuccess = document.querySelector('.error-success');
 const errorSuccessMesg = document.querySelector('.error-success__mesg');
 const errorSuccessClose = document.querySelector('.error-success__close');
-const addNotes = document.querySelector('.add-notes');
+const manipulateNotes = document.querySelector('.manipulate-notes');
 const notesContainer = document.querySelector('.notes-container');
 const addTextNotes = document.querySelector('.add-text-notes-container a');
 const addVoiceNotes = document.querySelector('.add-voice-notes-container a');
 const deleteTopic = document.querySelector('.delete-topics-container a');
+const editTopic = document.querySelector('.edit-topics-container a');
 const notesForm = document.querySelector('.text-notes-form');
 const deleteNote = document.querySelectorAll('.delete-note');
 const editNote = document.querySelectorAll('.edit-note');
@@ -43,7 +48,7 @@ let audioURL;
 
 //If there are error messages on reload
 if (!errorSuccess.classList.contains('close')) {
-	new Array(addNotes, notesContainer, topicPopup, navBar, bread).forEach((element) => {
+	new Array(manipulateNotes, notesContainer, topicPopup, navBar, bread).forEach((element) => {
 		element.style.pointerEvents = 'none';
 		element.style.userSelect = 'none';
 	});
@@ -85,12 +90,19 @@ function createTopic(topicName) {
 	div.appendChild(link);
 
 	topicSection.appendChild(div);
-	(
-		async () => axios.post(
-			'/topics/savetopic',
-			{ topicName: topicName },
-		)
-	)();
+	axios.post('/topics/savetopic',{ topicName: topicName });
+}
+
+function saveEditedTopic(topicName) {
+	let currentTopicName = document.querySelector('.notes-topic p').innerText;
+	axios.post('/topics/savetopic',
+	{
+		oldTopicName: currentTopicName,
+		topicName: topicName
+	}).then((res) => {
+		if (res.status === 201)
+		window.location.replace(`/topics/topic/${topicName}`);
+	});
 }
 
 function createErrorSuccess(mesg) {
@@ -172,7 +184,7 @@ function createTextNote() {
 	});
 }
 
-async function createVoiceNote() {
+function createVoiceNote() {
 	let currentNotesTopic = document.querySelector('.notes-topic p').innerText;
 	if (currentNotesTopic === '' || currentNotesTopic === null) {
 		createErrorSuccess(errNoNoteTopic);
@@ -298,14 +310,16 @@ async function createVoiceNote() {
 				});
 			}, 350);
 
-			newNotesForm.addEventListener('submit', async event => {
+			newNotesForm.addEventListener('submit', event => {
 				event.preventDefault();
 
 				let form = new FormData(newNotesForm);
 				form.append('voice-note-entry', audioBlob);
 
-				let resp = await axios.post(window.location.pathname, form);
-				window.location.reload(true);
+				axios.post(window.location.pathname, form)
+				.then(() => {
+					window.location.reload(true);
+				});
 			});
 		}
 	});
@@ -360,12 +374,12 @@ errorSuccessClose.addEventListener('click', () => {
 	errorSuccess.classList.toggle('close');
 
 	if (!errorSuccess.classList.contains('close')) {
-		new Array(changePasswordPopup, addNotes, notesContainer, topicPopup, navBar, bread).forEach((element) => {
+		new Array(changePasswordPopup, manipulateNotes, notesContainer, topicPopup, newTopicPopup, navBar, bread).forEach((element) => {
 			element.style.pointerEvents = 'none';
 			element.style.userSelect = 'none';
 		});
 	} else {
-		new Array(changePasswordPopup, addNotes, notesContainer, topicPopup, navBar, bread).forEach((element) => {
+		new Array(changePasswordPopup, manipulateNotes, notesContainer, topicPopup, newTopicPopup, navBar, bread).forEach((element) => {
 			element.style.pointerEvents = 'unset';
 			element.style.userSelect = 'auto';
 		});
@@ -411,6 +425,42 @@ topicPopupOK.addEventListener('click', event => {
 	topicPopup.style.transform = 'translate(-50%,-50%) scale(0)';
 	overlay.style.display = 'none';
 	bread.style.pointerEvents = 'unset';
+});
+
+newTopicPopupText.addEventListener('keypress', event => {
+	if (event.keyCode === 13) newTopicPopupOK.click()
+});
+
+newTopicPopupCancel.addEventListener('click', event => {
+	event.preventDefault();
+	newTopicPopupText.value = '';
+	newTopicPopup.style.transform = 'translate(-50%,-50%) scale(0)';
+	overlay.style.display = 'none';
+	bread.style.pointerEvents = 'unset';
+});
+
+newTopicPopupOK.addEventListener('click', event => {
+	event.preventDefault();
+	let cleanInput = removeWhitespace(newTopicPopupText.value);
+	newTopicPopupText.value = '';
+	if (cleanInput === '' || cleanInput === null) {
+		createErrorSuccess(errNoTopic);
+		 return;
+	 }
+	for (let topic of document.querySelectorAll('.topic a')) {
+		if (topic.innerText === cleanInput) {
+			createErrorSuccess(errTopicExists);
+			return;
+		}
+	};
+	if (cleanInput.length > 26) {
+		createErrorSuccess(errTopicLong);
+		return;
+	}
+	newTopicPopup.style.transform = 'translate(-50%,-50%) scale(0)';
+	overlay.style.display = 'none';
+	bread.style.pointerEvents = 'unset';
+	saveEditedTopic(cleanInput);
 });
 
 accountChangeUsername.addEventListener('click', event => {
@@ -491,6 +541,18 @@ deleteTopic.addEventListener('click', event => {
 	});
 });
 
+editTopic.addEventListener('click', event => {
+	event.preventDefault();
+	let currentNotesTopic = document.querySelector('.notes-topic p').innerText;
+	if (currentNotesTopic === '' || currentNotesTopic === null) {
+		createErrorSuccess(errNoNoteTopic);
+		return;
+	}
+	newTopicPopup.style.transform = 'translate(-50%,-50%) scale(1)';
+	overlay.style.display = 'unset';
+	bread.style.pointerEvents = 'none';
+});
+
 if (deleteNote) {
 	deleteNote.forEach(element => {
 		element.addEventListener('click', event => {
@@ -503,15 +565,12 @@ if (deleteNote) {
 					break;
 				}
 			}
-			(
-				async () => axios.post(
-					'/notes/deletenote',
-					{
-						topicName: topicName,
-						entryName: entryName
-					},
-				)
-			)();
+			axios.post('/notes/deletenote',
+				{
+					topicName: topicName,
+					entryName: entryName
+				},
+			);
 			event.currentTarget.parentElement.remove()
 		});
 	});

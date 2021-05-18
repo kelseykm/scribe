@@ -352,6 +352,7 @@ a:focus, a:hover {
 
 /* POPUPS */
 .topic-popup,
+.new-topic-popup,
 .changeusername-popup {
 	background-color: var(--popup-background);
 	width: 20em;
@@ -405,6 +406,7 @@ a:focus, a:hover {
 }
 
 .topic-popup__label,
+.new-topic-popup__label,
 .changeusername-popup__label,
 .changepassword-popup__label {
 	font-family: var(--secondary-font);
@@ -421,6 +423,7 @@ a:focus, a:hover {
 }
 
 .topic-popup__text,
+.new-topic-popup__text,
 .changeusername-popup__text,
 .changepassword-popup__text {
 	border: none;
@@ -439,6 +442,7 @@ a:focus, a:hover {
 }
 
 .topic-popup__btns,
+.new-topic-popup__btns,
 .changepassword-popup__btns,
 .changeusername-popup__btns {
 	padding: 1em;
@@ -459,13 +463,15 @@ a:focus, a:hover {
 
 .changeusername-popup__btns button + button,
 .changepassword-popup__btns button + button,
-.topic-popup__btns a + a {
+.topic-popup__btns a + a,
+.new-topic-popup__btns a + a {
 	margin-left: 3em;
 }
 
 .password-popup-btn__ok, .password-popup-btn__cancel,
 .username-popup-btn__ok, .username-popup-btn__cancel,
-.popup-btn__ok, .popup-btn__cancel {
+.popup-btn__ok, .popup-btn__cancel,
+.new-topic-popup-btn__ok, .new-topic-popup-btn__cancel {
 	background-color: var(--background-color);
 	padding: 0.25em 0.5em;
 	cursor: pointer;
@@ -475,7 +481,9 @@ a:focus, a:hover {
 .username-popup-btn__ok:focus, .username-popup-btn__cancel:focus,
 .username-popup-btn__ok:hover, .username-popup-btn__cancel:hover,
 .popup-btn__ok:focus, .popup-btn__cancel:focus,
-.popup-btn__ok:hover, .popup-btn__cancel:hover {
+.popup-btn__ok:hover, .popup-btn__cancel:hover,
+.new-topic-popup-btn__ok:focus, .new-topic-popup-btn__cancel:focus,
+.new-topic-popup-btn__ok:hover, .new-topic-popup-btn__cancel:hover {
 	box-shadow: 0 0 3px 2px var(--accent-color);
 	background-color: var(--primary-color);
 	color: var(--background-color);
@@ -811,7 +819,7 @@ a:focus, a:hover {
 	margin-bottom: 0.25em;
 }
 
-.add-notes {
+.manipulate-notes {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -822,10 +830,13 @@ a:focus, a:hover {
 	transform: translateY(-50%);
 }
 
-.add-text-notes-container, .add-voice-notes-container, .delete-topics-container {
+.add-text-notes-container,
+.add-voice-notes-container,
+.delete-topics-container,
+.edit-topics-container {
 	background-color: var(--primary-color);
-	width: 3.5em;
-	height: 3.5em;
+	width: 3em;
+	height: 3em;
 	border-radius: 50%;
 	display: grid;
 	place-items: center;
@@ -834,24 +845,39 @@ a:focus, a:hover {
 	position: relative;
 }
 
-.add-text-notes-container > a, .add-voice-notes-container > a, .delete-topics-container > a {
+.add-text-notes-container > a,
+.add-voice-notes-container > a,
+.delete-topics-container > a {
 	width: 100%;
 	height: 100%;
 }
 
-.add-text-notes-container > a img, .add-voice-notes-container > a img, .delete-topics-container > a img {
+.edit-topics-container > a {
+	max-height: 65%;
+	max-width: 65%;
+}
+
+.add-text-notes-container > a img,
+.add-voice-notes-container > a img,
+.delete-topics-container > a img,
+.edit-topics-container > a img {
 	max-height: 100%;
 	max-width: 100%;
 }
 
+
 .add-text-notes-container:focus-within, .add-voice-notes-container:focus-within,
 .add-text-notes-container:hover, .add-voice-notes-container:hover,
-.delete-topics-container:focus-within, .delete-topics-container:hover {
+.delete-topics-container:focus-within, .delete-topics-container:hover,
+.edit-topics-container:focus-within, .edit-topics-container:hover {
 	box-shadow: 0 0 0 3px var(--accent-color),
 							0 0 0 6px var(--primary-color);
 }
 
-.add-text-notes-container > p, .add-voice-notes-container > p, .delete-topics-container > p{
+.add-text-notes-container > p,
+.add-voice-notes-container > p,
+.delete-topics-container > p,
+.edit-topics-container > p {
 	text-transform: uppercase;
 	color: var(--background-color);
 	font-family: var(--primary-font);
@@ -871,7 +897,8 @@ a:focus, a:hover {
 
 .add-text-notes-container:focus-within > p, .add-voice-notes-container:focus-within > p,
 .add-text-notes-container:hover > p, .add-voice-notes-container:hover > p,
-.delete-topics-container:focus > p, .delete-topics-container:hover > p {
+.delete-topics-container:focus > p, .delete-topics-container:hover > p,
+.edit-topics-container:focus > p, .edit-topics-container:hover > p {
 	transform: translate(-120%, -50%) scaleX(1);
 	transition: transform 100ms ease;
 	transition-delay: 200ms;
@@ -1042,14 +1069,16 @@ a:focus, a:hover {
 
 	.add-text-notes-container,
 	.add-voice-notes-container,
-	.delete-topics-container {
+	.delete-topics-container,
+	.edit-topics-container {
 		width: 2.5em;
 		height: 2.5em;
 	}
 
 	.add-text-notes-container:focus-within, .add-voice-notes-container:focus-within,
 	.add-text-notes-container:hover, .add-voice-notes-container:hover,
-	.delete-topics-container:focus-within, .delete-topics-container:hover {
+	.delete-topics-container:focus-within, .delete-topics-container:hover,
+	.edit-topics-container:focus-within, .edit-topics-container:hover {
 		box-shadow: 0 0 0 2px var(--accent-color),
 								0 0 0 4px var(--primary-color);
 	}
@@ -1078,10 +1107,5 @@ a:focus, a:hover {
 
 	.footer__copyright {
 		margin-bottom: 1em;
-	}
-}
-@media only screen and (max-width: 767px) and (orientation: landscape) {
-	.add-notes {
-		transform: translateY(-25%);
 	}
 }

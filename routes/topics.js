@@ -215,20 +215,45 @@ router.post('/topic/:topicName', ensureFields, (req, res) => {
 });
 
 router.post('/savetopic', (req, res) => {
-  db.get('SELECT topic_name FROM topics WHERE user_id = ? AND topic_name = ?',
-  [ req.session.user.id, req.body.topicName ], (err, row) => {
-    if (err) console.error(err);
-    if (row) return res.status(400).json({message: "Topic exists"});
+	if (req.body.oldTopicName) {
+		db.get('SELECT topic_name FROM topics WHERE user_id = ? AND topic_name = ?',
+		[ req.session.user.id, req.body.oldTopicName ], (err, row) => {
+			if (err) console.error(err);
+			if (!row) return res.status(400).json({message: "Topic does not exist"});
 
-    db.run('INSERT INTO topics (user_id, topic_name) VALUES (?, ?)',
-    [ req.session.user.id, req.body.topicName ], err => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({message: "Topic creation failed"});
-      }
-      res.status(201).json({message: "Topic created"});
-    });
-  });
+			db.run('UPDATE topics SET topic_name = ? WHERE user_id = ? AND topic_name = ?',
+			[ req.body.topicName, req.session.user.id, req.body.oldTopicName ], err => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({message: "Topic update failed"});
+				}
+
+				db.run('UPDATE notes SET topic_name = ? WHERE user_id = ? AND topic_name = ?',
+				[ req.body.topicName, req.session.user.id, req.body.oldTopicName ], err => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({message: "Complete topic update failed"});
+					}
+					res.status(201).json({message: "Topic updated successfully"});
+				});
+			});
+		});
+	} else {
+		db.get('SELECT topic_name FROM topics WHERE user_id = ? AND topic_name = ?',
+		[ req.session.user.id, req.body.topicName ], (err, row) => {
+			if (err) console.error(err);
+			if (row) return res.status(400).json({message: "Topic exists"});
+
+			db.run('INSERT INTO topics (user_id, topic_name) VALUES (?, ?)',
+			[ req.session.user.id, req.body.topicName ], err => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({message: "Topic creation failed"});
+				}
+				res.status(201).json({message: "Topic created"});
+			});
+		});
+	}
 });
 
 router.post('/deletetopic', (req, res) => {
