@@ -12,7 +12,6 @@
 	font-style: normal;
 }
 
-
 *,
 *::before,
 *::after {
@@ -42,6 +41,23 @@ body {
 	flex-direction: column;
 }
 
+/* UTILS */
+h1 {
+	margin: 1em 0;
+}
+
+h2 {
+	margin: 0.75em 0;
+}
+
+h3 {
+	margin: 0.5em 0;
+}
+
+h4 {
+	margin: 0.25em 0;
+}
+
 a {
 	text-decoration: none;
 }
@@ -49,6 +65,18 @@ a {
 a:focus, a:hover {
 	border: none;
 	outline: none;
+}
+
+ol, ul {
+	margin-inline-start: 1em;
+}
+
+h1 u, h2 u, h3 u, h4 u {
+	text-decoration-color: var(--accent-color);
+}
+
+u {
+	text-decoration-color: var(--background-color);
 }
 
 .btn {
