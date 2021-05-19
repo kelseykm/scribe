@@ -666,6 +666,7 @@ a:focus, a:hover {
 	top: 0;
 	right: 1.8em;
 	margin: 3px;
+	cursor: pointer;
 }
 
 .edit-note__image {
