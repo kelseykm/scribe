@@ -84,6 +84,12 @@ a:focus, a:hover {
 	letter-spacing: 5px;
 }
 
+.title *::-moz-selection,
+.title *::selection {
+	color: var(--primary-color);
+	background-color: var(--accent-color);
+}
+
 .bread {
 	grid-column: 1/2;
 	justify-self: flex-start;
@@ -242,6 +248,12 @@ a:focus, a:hover {
 	font-size: 3em;
 	border-bottom: 1px solid var(--accent-color);
 	margin-bottom: 5px;
+}
+
+.topic-section__head::-moz-selection,
+.topic-section__head::selection {
+	color: var(--primary-color);
+	background-color: var(--background-color);
 }
 
 .topic a {
@@ -502,8 +514,7 @@ a:focus, a:hover {
 
 /*** NOTES ***/
 .notes-container {
-	display: grid;
-	place-items: center;
+	width: 100%;
 }
 
 /* SAVED NOTES */
@@ -543,6 +554,12 @@ a:focus, a:hover {
 	margin: 0.5em;
 }
 
+.text-notes__header::-moz-selection, .voice-notes__header::-moz-selection,
+.text-notes__header::selection, .voice-notes__header::selection {
+	color: var(--background-color);
+	background-color: var(--primary-color);
+}
+
 .text-note, .voice-note {
 	width: 100%;
 	border-radius: 5px;
@@ -570,12 +587,23 @@ a:focus, a:hover {
 	border-bottom: 3px solid var(--accent-color);
 	max-width: max-content;
 	margin: 0 auto 0.5em;
+	padding: 0 3px;
+	overflow-x: auto;
+}
+
+.text-note *::-moz-selection,
+.voice-note *::-moz-selection,
+.text-note *::selection,
+.voice-note *::selection {
+	color: var(--primary-color);
+	background-color: var(--accent-color);
 }
 
 .text-note > *:where(:not(.note-name, .delete-note, .creation-time)) {
 	font-family: var(--secondary-font);
 	font-size: 1.4em;
 	text-align: left;
+	text-underline-offset: 3px;
 }
 
 .text-note li::marker {
@@ -726,7 +754,6 @@ a:focus, a:hover {
 /* TEXT NOTES */
 
 .text-notes-form {
-	width: 80%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -816,7 +843,13 @@ a:focus, a:hover {
 	font-size: 3em;
 	border-bottom: 3px solid var(--accent-color);
 	max-width: max-content;
-	margin-bottom: 0.25em;
+	margin: 0 auto 0.25em;
+}
+
+.notes-topic p::-moz-selection,
+.notes-topic p::selection {
+	color: var(--background-color);
+	background-color: var(--primary-color);
 }
 
 .manipulate-notes {
@@ -906,7 +939,7 @@ a:focus, a:hover {
 
 
 /* AUDIO NOTES */
-.audio-notes-form {
+.voice-notes-form {
 	display: grid;
 	place-items: center;
 	margin-bottom: 2em;
@@ -1067,6 +1100,10 @@ a:focus, a:hover {
 		width: 75%;
 	}
 
+	.note-name {
+		font-size: 1.8em;
+	}
+
 	.add-text-notes-container,
 	.add-voice-notes-container,
 	.delete-topics-container,
@@ -1083,13 +1120,9 @@ a:focus, a:hover {
 								0 0 0 4px var(--primary-color);
 	}
 
-	.text-notes-form {
-		width: 100%;
-		margin-right: 3em;
-	}
-
-	.audio-entry-container {
-		margin-right: 3em;
+	.text-notes-form,
+	.voice-notes-form {
+		margin: 0 4em 0 1em;
 	}
 
 	.footer-container {

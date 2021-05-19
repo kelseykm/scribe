@@ -16,5 +16,4 @@ CKEDITOR.editorConfig = function( config ) {
 	];
 	config.removeButtons = 'PasteFromWord,Scayt,Link,Unlink,Anchor,Maximize,Source,RemoveFormat,About,Cut,Copy,Paste,PasteText,Image';
   config.uiColor = '#dd9a1c';
-  config.width = '70%';
 };
