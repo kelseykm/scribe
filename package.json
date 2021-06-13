@@ -1,6 +1,6 @@
 {
   "name": "scribe",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "The only way to take notes in a modern world",
   "main": "server.js",
   "scripts": {
