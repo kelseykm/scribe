@@ -1,6 +1,8 @@
 # **scribe**
 *The only way to take notes in a modern world*
 
+#### **scribe IS NOW DEPRECATED, PLEASE USE _scribe2_ at: https://github.com/kelseykm/scribe2**
+
 * Scribe is a web application that allows you to take both voice and text notes.
 * The notes are separated by topics.
 * Each user has an account.
